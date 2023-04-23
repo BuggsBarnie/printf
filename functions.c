@@ -13,9 +13,9 @@
 int print_char(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	char q = va_arg(types, int);
+	char c = va_arg(types, int);
 
-	return (handle_write_char(q, buffer, flags, width, precision, size));
+	return (handle_write_char(c, buffer, flags, width, precision, size));
 }
 
 /**
@@ -31,7 +31,7 @@ int print_char(va_list types, char buffer[],
 int print_string(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	int length = 0, z;
+	int length = 0, i;
 	char *str = va_arg(types, char *);
 
 	UNUSED(buffer);
@@ -57,13 +57,13 @@ int print_string(va_list types, char buffer[],
 		if (flags & F_MINUS)
 		{
 			write(1, &str[0], length);
-			for (z = width - length; z > 0; z--)
+			for (i = width - length; i > 0; i--)
 				write(1, " ", 1);
 			return (width);
 		}
 		else
 		{
-			for (z = width - length; z > 0; z--)
+			for (i = width - length; i > 0; i--)
 				write(1, " ", 1);
 			write(1, &str[0], length);
 			return (width);
@@ -107,7 +107,7 @@ int print_percent(va_list types, char buffer[],
 int print_int(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	int y = BUFF_SIZE - 2;
+	int i = BUFF_SIZE - 2;
 	int is_negative = 0;
 	long int n = va_arg(types, long int);
 	unsigned long int num;
@@ -128,11 +128,11 @@ int print_int(va_list types, char buffer[],
 
 	while (num > 0)
 	{
-		buffer[y--] = (num % 10) + '0';
+		buffer[i--] = (num % 10) + '0';
 		num /= 10;
 	}
 
-	y++;
+	i++;
 
 	return (write_number(is_negative, y, buffer, flags, width, precision, size));
 }
@@ -150,9 +150,9 @@ int print_int(va_list types, char buffer[],
 int print_binary(va_list types, char buffer[],
 	int flags, int width, int precision, int size)
 {
-	unsigned int g, v, i, sum;
+	unsigned int n, m, i, sum;
 	unsigned int b[32];
-	int calc;
+	int count;
 
 	UNUSED(buffer);
 	UNUSED(flags);
@@ -160,24 +160,24 @@ int print_binary(va_list types, char buffer[],
 	UNUSED(precision);
 	UNUSED(size);
 
-	g = va_arg(types, unsigned int);
-	v = 2147483648; /* (2 ^ 31) */
-	b[0] = g / v;
+	n = va_arg(types, unsigned int);
+	m = 2147483648; /* (2 ^ 31) */
+	a[0] = n / m;
 	for (i = 1; i < 32; i++)
 	{
-		v /= 2;
-		b[i] = (g / v) % 2;
+		m /= 2;
+		a[i] = (n / m) % 2;
 	}
 	for (i = 0, sum = 0, calc = 0; i < 32; i++)
 	{
-		sum += b[i];
+		sum += a[i];
 		if (sum || i == 31)
 		{
-			char z = '0' + b[i];
+			char z = '0' + a[i];
 
 			write(1, &z, 1);
-			calc++;
+			count++;
 		}
 	}
-	return (calc);
+	return (count);
 }
