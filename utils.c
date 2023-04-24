@@ -18,7 +18,7 @@ int is_printable(char c)
 /**
  * append_hexa_code - Function that appends ascii to the buffer
  * @buffer: Array of chars for printing
- * @i: Index 
+ * @i: Index
  * @ascii_code: Ascii code values
  * Return: int
  */
